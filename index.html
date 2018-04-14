@@ -2,11 +2,31 @@
 <html lang="en" style="height: 100%">
   <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="css/login.css">
     <title>sidekick</title>
   </head>
-  <body style="height: 100%; margin: 0">
-    <div id="app"></div>
-    <script src="/dist/build.js"></script>
+  <body>
+    <div id="main">
+      <div class="login">
+        <div class="login-screen">
+          <div class="app-title">
+            <h1>Авторизация</h1>
+          </div>
+
+          <script type="text/javascript" src="//vk.com/js/api/openapi.js?153"></script>
+          <script type="text/javascript">
+            VK.init({apiId: 6448277});
+          </script>
+
+          <!-- VK Widget -->
+          <div id="vk_auth"></div>
+          <script type="text/javascript">
+            VK.Widgets.Auth("vk_auth", {"authUrl":"/dev/Login"});
+          </script>
+
+        </div>
+      </div>
+    </div>
   </body>
 </html>
 
