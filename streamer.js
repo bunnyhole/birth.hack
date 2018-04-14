@@ -6,7 +6,7 @@ function init() {
 }
 
 function start() {
-    Flashphoner.createSession({urlServer: "wss://18.236.64.188"}).on(Flashphoner.constants.SESSION_STATUS.ESTABLISHED, function (session) {
+    Flashphoner.createSession({urlServer: "wss://18.236.64.188:8443"}).on(Flashphoner.constants.SESSION_STATUS.ESTABLISHED, function (session) {
         //session connected, start streaming
         startStreaming(session);
     }).on(Flashphoner.constants.SESSION_STATUS.DISCONNECTED, function () {
