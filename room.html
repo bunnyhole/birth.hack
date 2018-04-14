@@ -1,0 +1,123 @@
+<html>
+  <head>
+    <title>SIDEKICK</title>
+    <link rel="stylesheet" type="text/css" href="css/room.css">
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous"></script>
+
+    <script>
+      function getUrlParameter(sParam) {
+        var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+          sParameterName = sURLVariables[i].split('=');
+
+          if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
+          }
+        }
+      }; 
+      
+      
+      var room_data = {
+        room_id: getUrlParameter("room")
+      }
+
+      $.get("/api/rooms", room_data, function (result) {
+        $("#stream-video").attr("src", result.yt_src);       
+      });
+
+      $.get("/api/chat", room_data, function (result) {
+        for (var i = 0; i < result.messages.length; ++i) {
+          $("#messages").append(`
+            <div class="message">
+              <div class="message-author">${result.messages[i].name}</div>
+              <div class="message-body">${result.messages[i].body}</div>
+            </div>
+          `)
+        }
+      });
+
+       $.get("/api/watchers", room_data, function(result) {
+        for (var i = 0; i < result.watchers.length; ++i) {
+          $("#watchers").append(`
+            <div class="watcher">
+              <img src="https://img04.rl0.ru/c65325a2216474b2eaf3cb24d63acf07/c615x400/news.rambler.ru/img/2018/02/01152931.044266.5111.jpg">
+            </div>
+          `);
+        }
+      });
+    </script>
+  </head>
+
+  <body>
+    <div class="row">
+      <div id="stream" class="col-6">
+        <iframe id="stream-video" src="https://www.youtube.com/embed/Uybnaf1yVd0" frameborder="0" allow="autoplay; encrypted-media"></iframe>
+      </div>
+
+     <div id="bets" class="col-3">
+        <div id="bet-amount">2000₽</div>
+        <div class="bet">
+          <div class="bet-author">
+            Василий Иванов
+          </div>
+          <div class="bet-result">
+            5:0
+          </div>
+        </div>
+        <div class="bet">
+          <div class="bet-author">
+            Иван Васильев
+          </div>
+          <div class="bet-result">
+            1:0
+          </div>
+        </div>
+      </div>
+
+      <div id="chat" class="col-3">
+        <div class="message">
+          <div class="message-author">
+            Василий Иванов
+          </div>
+          
+          <div class="message-body">
+            ((((((((((
+          </div>
+        </div>
+        <div class="message">
+          <div class="message-author">
+            Иван Васильев
+          </div>
+          
+          <div class="message-body">
+            ))))))))))
+          </div>
+        </div>
+      </div>
+     </div>
+
+     <div id="watchers" class="row">
+        <div class="watcher col-3">
+          <img src="https://img04.rl0.ru/c65325a2216474b2eaf3cb24d63acf07/c615x400/news.rambler.ru/img/2018/02/01152931.044266.5111.jpg">
+        </div>
+        <div class="watcher col-3">
+          <img src="https://img04.rl0.ru/c65325a2216474b2eaf3cb24d63acf07/c615x400/news.rambler.ru/img/2018/02/01152931.044266.5111.jpg">
+        </div>
+        <div class="watcher col-3">
+          <img src="https://img04.rl0.ru/c65325a2216474b2eaf3cb24d63acf07/c615x400/news.rambler.ru/img/2018/02/01152931.044266.5111.jpg">
+        </div>
+
+        <div class="watcher col-3">
+          <img src="https://img04.rl0.ru/c65325a2216474b2eaf3cb24d63acf07/c615x400/news.rambler.ru/img/2018/02/01152931.044266.5111.jpg">
+        </div>
+
+    </div>
+  </body>
+</html>
