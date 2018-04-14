@@ -1,0 +1,21 @@
+<html>
+<head>
+    <script language="javascript" src="flashphoner_api/flashphoner.js"></script>
+    <script language="javascript" src="full.js"></script>
+</head>
+<body onLoad="init()">
+    <h1>The streamer</h1>
+    <div id="localVideo" style="width:320px;height:240px;border: 1px solid"></div>
+    <input id="streamer_id" type="text" value="stream1"/>
+    <input type="button" value="start" onClick="start_stream()"/>
+    <p id="status_stream"></p>
+
+    <h1>The player</h1>
+    <div id="remoteVideo1" style="width:320px;height:240px;border: 1px solid"></div>
+    <p id="status1"></p>
+    <br><br>
+    <div id="remoteVideo2" style="width:320px;height:240px;border: 1px solid"></div>
+    <input type="button" value="start" onClick="start()"/>
+    <p id="status2"></p>
+</body>
+</html>
