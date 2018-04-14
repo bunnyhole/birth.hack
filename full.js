@@ -59,12 +59,12 @@ function update_friends() {
             startPlayback(session, friend_id, friend_id, false);
         }).on(Flashphoner.constants.SESSION_STATUS.DISCONNECTED, function () {
             setStatus("DISCONNECTED", "status" + friend_id);
-            document.getElementById(tag_friend_video_id).innerHTML = "";
-            document.getElementById(tag_friend_video_id).style.display = "none";
+            document.getElementById("remoteVideo" + friend_id).innerHTML = "";
+            document.getElementById("remoteVideo" + friend_id).style.display = "none";
         }).on(Flashphoner.constants.SESSION_STATUS.FAILED, function () {
             setStatus("FAILED", "status" + friend_id);
-            document.getElementById(tag_friend_video_id).innerHTML = "";
-            document.getElementById(tag_friend_video_id).style.display = "none";
+            document.getElementById("remoteVideo" + friend_id).innerHTML = "";
+            document.getElementById("remoteVideo" + friend_id).style.display = "none";
         });
     });
 
