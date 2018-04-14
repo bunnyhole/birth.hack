@@ -7,7 +7,7 @@ let localVideo;
 function init() {
     Flashphoner.init();
     localVideo = document.getElementById("localVideo");
-    let timerId = setInterval(update_friends, 5000);
+    let timerId = setInterval(update_friends, 2000);
 }
 
 function start_stream() {
@@ -56,7 +56,7 @@ function update_friends() {
     friends_id_list.forEach(function (friend_id, i, friends_id_list) {
         //console.log(friend_id);
         Flashphoner.createSession({urlServer: hostname}).on(Flashphoner.constants.SESSION_STATUS.ESTABLISHED, function (session) {
-            startPlayback(session, friend_id, friend_id);
+            startPlayback(session, friend_id, friend_id, false);
         }).on(Flashphoner.constants.SESSION_STATUS.DISCONNECTED, function () {
             setStatus("DISCONNECTED", "status" + friend_id);
             document.getElementById(tag_friend_video_id).innerHTML = "";
@@ -71,7 +71,7 @@ function update_friends() {
 
 }
 
-function startPlayback(session, friend_id, friend_video_id) {
+function startPlayback(session, friend_id, friend_video_id, is_real) {
     let tag_friend_video_id = "remoteVideo" + friend_video_id;
     let hidden_tag_friend_video_id = "hiddenremoteVideo" + friend_video_id;
     let hidden_video = document.getElementById("hiddenremoteVideo" + friend_video_id);
@@ -80,8 +80,8 @@ function startPlayback(session, friend_id, friend_video_id) {
     fake_video.innerHTML = "";
 
     let working_video = fake_video;
-    console.log(video_id_to_update);
-    if (friend_video_id in video_id_to_update) {
+    console.log(is_real);
+    if (is_real) {
         console.log("remoteVideo");
         working_video = remoteVideo;
     } else {
@@ -97,16 +97,20 @@ function startPlayback(session, friend_id, friend_video_id) {
     }).on(Flashphoner.constants.STREAM_STATUS.PLAYING, function (playStream) {
         setStatus(Flashphoner.constants.STREAM_STATUS.PLAYING, "status" + friend_video_id);
 
-        console.log("is?", (friend_video_id in video_id_to_update) && (remoteVideo.innerHTML == ""));
+        //console.log("is?", (friend_video_id in video_id_to_update) && (remoteVideo.innerHTML == ""));
 
-        if ((friend_video_id in video_id_to_update) && (remoteVideo.innerHTML == "")) {
-            document.getElementById(tag_friend_video_id).style.display = "block";
-        } else {
-            video_id_to_update.push(friend_video_id);
-        }
+        // if ((friend_video_id in video_id_to_update) && (remoteVideo.innerHTML == "")) {
+        //     document.getElementById(tag_friend_video_id).style.display = "block";
+        // } else {
+        //     video_id_to_update.push(friend_video_id);
+        // }
 
         //document.getElementById(tag_friend_video_id).innerHTML = document.getElementById(hidden_tag_friend_video_id).innerHTML;
         //document.getElementById(hidden_tag_friend_video_id).innerHTML = "";
+        console.log("succ", remoteVideo.style.display != "block");
+        if (!is_real && remoteVideo.style.display != "block") {
+            startPlayback(session, friend_id, friend_id, true);
+        }
         document.getElementById(tag_friend_video_id).style.display = "block";
     }).on(Flashphoner.constants.STREAM_STATUS.STOPPED, function () {
         setStatus(Flashphoner.constants.STREAM_STATUS.STOPPED, "status" + friend_video_id);
