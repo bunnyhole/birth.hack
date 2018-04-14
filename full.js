@@ -1,6 +1,5 @@
 let stream_id;
-let stream_id1 = "stream1";
-let stream_id2 = "stream2";
+let hostname = "wss://localhost:8443";
 
 let remoteVideo1;
 let remoteVideo2;
@@ -16,13 +15,13 @@ function init() {
 
 function start_stream() {
     stream_id = document.getElementById("streamer_id").value;
-    Flashphoner.createSession({urlServer: "wss://localhost:8443"}).on(Flashphoner.constants.SESSION_STATUS.ESTABLISHED, function (session) {
+    Flashphoner.createSession({urlServer: hostname}).on(Flashphoner.constants.SESSION_STATUS.ESTABLISHED, function (session) {
         //session connected, start streaming
         startStreaming(session);
     }).on(Flashphoner.constants.SESSION_STATUS.DISCONNECTED, function () {
-        setStatus_stream("DISCONNECTED");
+        setStatus("DISCONNECTED", "status_stream");
     }).on(Flashphoner.constants.SESSION_STATUS.FAILED, function () {
-        setStatus_stream("FAILED");
+        setStatus("FAILED", "status_stream");
     });
 }
 
@@ -34,55 +33,59 @@ function startStreaming(session) {
         receiveVideo: false,
         receiveAudio: false
     }).on(Flashphoner.constants.STREAM_STATUS.PUBLISHING, function (publishStream) {
-        setStatus_stream(Flashphoner.constants.STREAM_STATUS.PUBLISHING);
+        setStatus(Flashphoner.constants.STREAM_STATUS.PUBLISHING, "status_stream");
     }).on(Flashphoner.constants.STREAM_STATUS.UNPUBLISHED, function () {
-        setStatus_stream(Flashphoner.constants.STREAM_STATUS.UNPUBLISHED);
+        setStatus(Flashphoner.constants.STREAM_STATUS.UNPUBLISHED, "status_stream");
     }).on(Flashphoner.constants.STREAM_STATUS.FAILED, function () {
-        setStatus_stream(Flashphoner.constants.STREAM_STATUS.FAILED);
+        setStatus(Flashphoner.constants.STREAM_STATUS.FAILED, "status_stream");
     }).publish();
 }
 
-function setStatus_stream(status) {
-    document.getElementById("status_stream").innerHTML = status;
+function setStatus(status, element_id) {
+    document.getElementById(element_id).innerHTML = status;
 }
 
+let friends_list = ["stream1", "stream2"];
+
+function update_friends() {
+    for (let i = 1; i <= 10; i++) {
+        document.getElementById("remoteVideo" + i).innerHTML = "";
+        document.getElementById("remoteVideo" + i).style.display = "block";
+    }
 
 
-
-
-function start() {
-    Flashphoner.createSession({urlServer: "wss://localhost:8443"}).on(Flashphoner.constants.SESSION_STATUS.ESTABLISHED, function (session) {
+    Flashphoner.createSession({urlServer: hostname}).on(Flashphoner.constants.SESSION_STATUS.ESTABLISHED, function (session) {
         //session connected, start streaming
         startPlayback1(session);
     }).on(Flashphoner.constants.SESSION_STATUS.DISCONNECTED, function () {
-        setStatus1("DISCONNECTED");
+        setStatus("DISCONNECTED", "status1");
     }).on(Flashphoner.constants.SESSION_STATUS.FAILED, function () {
-        setStatus1("FAILED");
+        setStatus("FAILED", "status1");
     });
 
-    Flashphoner.createSession({urlServer: "wss://localhost:8443"}).on(Flashphoner.constants.SESSION_STATUS.ESTABLISHED, function (session) {
+    Flashphoner.createSession({urlServer: hostname}).on(Flashphoner.constants.SESSION_STATUS.ESTABLISHED, function (session) {
         //session connected, start streaming
         startPlayback2(session);
     }).on(Flashphoner.constants.SESSION_STATUS.DISCONNECTED, function () {
-        setStatus2("DISCONNECTED");
+        setStatus("DISCONNECTED", "status2");
     }).on(Flashphoner.constants.SESSION_STATUS.FAILED, function () {
-        setStatus2("FAILED");
+        setStatus("FAILED", "status2");
     });
 }
 
-function startPlayback1(session) {
+function startPlayback(session, friend_id, friend_video_id) {
     session.createStream({
-        name: stream_id1,
-        display: remoteVideo1,
+        name: friend_id,
+        display: friend_video_id,
         cacheLocalResources: true,
         receiveVideo: true,
         receiveAudio: true
     }).on(Flashphoner.constants.STREAM_STATUS.PLAYING, function (playStream) {
-        setStatus1(Flashphoner.constants.STREAM_STATUS.PLAYING);
+        setStatus(Flashphoner.constants.STREAM_STATUS.PLAYING, "status1");
     }).on(Flashphoner.constants.STREAM_STATUS.STOPPED, function () {
-        setStatus1(Flashphoner.constants.STREAM_STATUS.STOPPED);
+        setStatus(Flashphoner.constants.STREAM_STATUS.STOPPED, "status1");
     }).on(Flashphoner.constants.STREAM_STATUS.FAILED, function () {
-        setStatus1(Flashphoner.constants.STREAM_STATUS.FAILED);
+        setStatus(Flashphoner.constants.STREAM_STATUS.FAILED, "status1");
     }).play();
 }
 
@@ -94,18 +97,10 @@ function startPlayback2(session) {
         receiveVideo: true,
         receiveAudio: true
     }).on(Flashphoner.constants.STREAM_STATUS.PLAYING, function (playStream) {
-        setStatus2(Flashphoner.constants.STREAM_STATUS.PLAYING);
+        setStatus(Flashphoner.constants.STREAM_STATUS.PLAYING, "status2");
     }).on(Flashphoner.constants.STREAM_STATUS.STOPPED, function () {
-        setStatus2(Flashphoner.constants.STREAM_STATUS.STOPPED);
+        setStatus(Flashphoner.constants.STREAM_STATUS.STOPPED, "status2");
     }).on(Flashphoner.constants.STREAM_STATUS.FAILED, function () {
-        setStatus2(Flashphoner.constants.STREAM_STATUS.FAILED);
+        setStatus(Flashphoner.constants.STREAM_STATUS.FAILED, "status2");
     }).play();
-}
-
-function setStatus1(status) {
-    document.getElementById("status1").innerHTML = status;
-}
-
-function setStatus2(status) {
-    document.getElementById("status2").innerHTML = status;
 }

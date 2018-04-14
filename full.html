@@ -2,20 +2,55 @@
 <head>
     <script language="javascript" src="flashphoner_api/flashphoner.js"></script>
     <script language="javascript" src="full.js"></script>
+    <style>
+        .friend_video {
+            width: 320px;
+            height: 240px;
+            border: 1px solid;
+            display: none;
+        }
+    </style>
 </head>
 <body onLoad="init()">
-    <h1>The streamer</h1>
-    <div id="localVideo" style="width:320px;height:240px;border: 1px solid"></div>
-    <input id="streamer_id" type="text" value="stream1"/>
-    <input type="button" value="start" onClick="start_stream()"/>
-    <p id="status_stream"></p>
+<h1>The streamer</h1>
+<div id="localVideo" style="width:320px;height:240px;border: 1px solid"></div>
+<input id="streamer_id" type="text" value="stream1"/>
+<input type="button" value="start" onClick="start_stream()"/>
+<p id="status_stream"></p>
 
-    <h1>The player</h1>
-    <div id="remoteVideo1" style="width:320px;height:240px;border: 1px solid"></div>
-    <p id="status1"></p>
-    <br><br>
-    <div id="remoteVideo2" style="width:320px;height:240px;border: 1px solid"></div>
-    <input type="button" value="start" onClick="start()"/>
-    <p id="status2"></p>
+<h1>The player</h1>
+<input type="button" value="start" onClick="update_friends()"/>
+
+<div id="remoteVideo1" class="friend_video" style="width:320px;height:240px;border: 1px solid"></div>
+<p id="status1"></p>
+<br>
+<div id="remoteVideo2" class="friend_video"></div>
+<p id="status2"></p>
+<br>
+<div id="remoteVideo3" class="friend_video"></div>
+<p id="status3"></p>
+<br>
+<div id="remoteVideo4" class="friend_video"></div>
+<p id="status4"></p>
+<br>
+<div id="remoteVideo5" class="friend_video"></div>
+<p id="status5"></p>
+<br>
+<div id="remoteVideo6" class="friend_video"></div>
+<p id="status6"></p>
+<br>
+<div id="remoteVideo7" class="friend_video"></div>
+<p id="status7"></p>
+<br>
+<div id="remoteVideo8" class="friend_video"></div>
+<p id="status8"></p>
+<br>
+<div id="remoteVideo9" class="friend_video"></div>
+<p id="status9"></p>
+<br>
+<div id="remoteVideo10" class="friend_video"></div>
+<p id="status10"></p>
+<br>
+
 </body>
 </html>
