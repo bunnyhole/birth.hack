@@ -42,7 +42,7 @@ function setStatus(status, element_id) {
     //document.getElementById(element_id).innerHTML = status;
 }
 
-let friends_id_list = ["1", "2", "3", "4", "5"];
+let friends_id_list = [];
 
 let video_id_to_update = [];
 
@@ -80,6 +80,7 @@ function startPlayback(session, friend_id, friend_video_id, is_real) {
     fake_video.innerHTML = "";
 
     let working_video = fake_video;
+    console.log(tag_friend_video_id);
     console.log(is_real);
     if (is_real) {
         console.log("remoteVideo");
@@ -109,7 +110,7 @@ function startPlayback(session, friend_id, friend_video_id, is_real) {
         //document.getElementById(hidden_tag_friend_video_id).innerHTML = "";
         console.log("succ", remoteVideo.style.display != "block");
         if (!is_real && remoteVideo.style.display != "block") {
-            startPlayback(session, friend_id, friend_id, true);
+            startPlayback(session, friend_id, friend_video_id, true);
         }
         document.getElementById(tag_friend_video_id).style.display = "block";
     }).on(Flashphoner.constants.STREAM_STATUS.STOPPED, function () {

@@ -43,13 +43,23 @@ def chat(request):
 
 def register(request):
     room_name = request.GET.get('name', '')
+    pprint(room_name)
     user_name = request.GET.get('user_name', '')
     room = Room.objects.get(name=room_name)      
     watcher = Watcher(room=room, name=user_name)
     watcher.save()
+    return HttpResponse()
+
+def unregister(request):
+    room_name = request.GET.get('name', '')
+    user_name = request.GET.get('user_name', '')
+    room = Room.objects.get(name=room_name)      
+    watcher = Watcher.objects.get(room=room, name=user_name).delete()
+    return HttpResponse()
 
 def watchers(request):
     room_name = request.GET.get('name', '')
+    print(room_name)
     room = Room.objects.get(name=room_name)      
     messages = list(map(lambda w: {"name": w.name}, Watcher.objects.filter(room=room)))
 

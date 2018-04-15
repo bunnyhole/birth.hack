@@ -37,6 +37,10 @@
         $("#guest-title").html(result.guest);       
       });
 
+	$.get('https://sidekick.online:81/room/register' + query_string + "&user_name=" + user_name, function(result) {});
+	$( window ).on("unload", function() {
+		$.get('https://sidekick.online:81/room/unregister' + query_string + "&user_name=" + user_name, function(result) {});
+	});
       $.get("https://sidekick.online:81/room/chat" + query_string, function (result) {
         console.log(result);
         for (var i = 0; i < result.messages.length; ++i) {
@@ -49,13 +53,23 @@
         }
       });
 
-      /*$.get("https://sidekick.online:81/room/watchers" + query_string, function(result) {
-        for (var i = 0; i < result.watchers.length; ++i) {
-          $("#watchers").append(`
-                  `);
+	var updateWatchers = function() {
+      $.get("https://sidekick.online:81/room/watchers" + query_string, function(result) {
+        var new_friends_id_list = [];
+	console.log(result);
+	for (var i = 0; i < result.watchers.length; ++i) {
+		if (!new_friends_id_list.includes(result.watchers[i])) {
+			new_friends_id_list.push(result.watchers[i].name)	
+			$(`.watcher:eq(${i})`).show()
+			console.log("ok");	
+		}
         }
-      });*/
-      
+	if (new_friends_id_list.toString() != friends_id_list.toString()) {
+		friends_id_list = new_friends_id_list;
+		update_friends();
+	}
+      });
+      }
       
       var updateBets = function() {
         $.get("https://sidekick.online:81/room/bets" + query_string, function(result) {
@@ -86,12 +100,16 @@
       $("document").ready(function() {
         $("#set-home").click(function() { postBet("home") });
         $("#set-guest").click(function() { postBet("guest") });
+        $("#join").click(function() { init();  start_stream(); });
+        $("#update").click(function() { update_friends() });
+	$("#streamer_id").val(user_name);
         setInterval(updateBets, 1000);
+        setInterval(updateWatchers, 10000);
       });
     </script>
   </head>
 
-  <body onload="init()">
+  <body>
     <div class="row">
       <div id="stream" class="col-6">
         <iframe id="stream-video" frameborder="0" allow="autoplay; encrypted-media"></iframe>
@@ -115,22 +133,20 @@
 
      </div>
 
-	<input type="button" value="присоединиться к чату" onClick="start_stream()"/>
+	<input type="button" value="присоединиться к чату" id="join"/>
+	<input type="button" value="обновить" id="update"/>
      <div id="watchers" class="row"> 
+		<div id="fakeVideo" style="display:none"></div>
 		<input id="streamer_id" type=hidden value="stream1">
-	    <div class="watcher col-3" id="localVideo">
+	    <div id="localVideo" style="display: none">
             </div>
 	    <div class="watcher col-3" id="remoteVideo1" style="display:none">
-              <img src="https://img04.rl0.ru/c65325a2216474b2eaf3cb24d63acf07/c615x400/news.rambler.ru/img/2018/02/01152931.044266.5111.jpg">
             </div>
             <div class="watcher col-3" id="remoteVideo2" style="display:none">
-              <img src="https://img04.rl0.ru/c65325a2216474b2eaf3cb24d63acf07/c615x400/news.rambler.ru/img/2018/02/01152931.044266.5111.jpg">
             </div>
 	    <div class="watcher col-3" id="remoteVideo3" style="display:none">
-              <img src="https://img04.rl0.ru/c65325a2216474b2eaf3cb24d63acf07/c615x400/news.rambler.ru/img/2018/02/01152931.044266.5111.jpg">
             </div>
             <div class="watcher col-3" id="remoteVideo4" style="display:none">
-              <img src="https://img04.rl0.ru/c65325a2216474b2eaf3cb24d63acf07/c615x400/news.rambler.ru/img/2018/02/01152931.044266.5111.jpg">
             </div>
 
     </div>
