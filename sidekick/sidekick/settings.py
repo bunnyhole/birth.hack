@@ -25,7 +25,7 @@ SECRET_KEY = 'z8&vewfa_gut%qv!56u^dmi=_(0!2^6i4h&5#2mwr+i2m6_lcp'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['sidekick.online', 'localhost']
 
 
 # Application definition

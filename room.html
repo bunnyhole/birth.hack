@@ -1,11 +1,15 @@
+<meta charset="UTF-8">
 <html>
   <head>
     <title>SIDEKICK</title>
     <link rel="stylesheet" type="text/css" href="css/room.css">
+	<script src="flashphoner_api/flashphoner.js"></script>
     <script
       src="https://code.jquery.com/jquery-3.3.1.min.js"
       integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
       crossorigin="anonymous"></script>
+
+	<script src="full.js"></script>
 
     <script>
       function getUrlParameter(sParam) {
@@ -22,20 +26,18 @@
           }
         }
       }; 
-      
-      
-      var room_data = {
-        name: getUrlParameter("room")
-      }
 
-      $.get("http://localhost/room", room_data, function (result) {
+      var user_name = getUrlParameter("user_name")
+      var query_string = "?name=" + getUrlParameter("room")
+
+      $.get("https://sidekick.online:81/room/" + query_string, function (result) {
         console.log(result);
         $("#stream-video").attr("src", result.yt_src);       
         $("#home-title").html(result.home);       
         $("#guest-title").html(result.guest);       
       });
 
-      $.get("http://localhost/room/chat", room_data, function (result) {
+      $.get("https://sidekick.online:81/room/chat" + query_string, function (result) {
         console.log(result);
         for (var i = 0; i < result.messages.length; ++i) {
           $("#chat").append(`
@@ -47,20 +49,16 @@
         }
       });
 
-      $.get("http://localhost/room/watchers", room_data, function(result) {
+      /*$.get("https://sidekick.online:81/room/watchers" + query_string, function(result) {
         for (var i = 0; i < result.watchers.length; ++i) {
           $("#watchers").append(`
-            <div class="watcher col-3">
-              <img src="https://img04.rl0.ru/c65325a2216474b2eaf3cb24d63acf07/c615x400/news.rambler.ru/img/2018/02/01152931.044266.5111.jpg">
-            </div>
-          `);
+                  `);
         }
-      });
+      });*/
       
-      var user_name = "Михаил Маликов"
       
       var updateBets = function() {
-        $.get("http://localhost/room/bets", room_data, function(result) {
+        $.get("https://sidekick.online:81/room/bets" + query_string, function(result) {
           $("#bet-amount").html(1000*result.bets.length + "₽")
           $("#home").html("")
           $("#guest").html("")
@@ -81,14 +79,8 @@
       }
 
       var postBet = function(side) {
-        var bet_data = {
-          room_name: room_data["name"],
-          name: user_name,
-          value: side,
-        }
-        console.log(bet_data);
-
-        $.get("http://localhost/room/put_bet", bet_data, function(result) { updateBets() });
+	var query_string = "?room_name=" + getUrlParameter("room") + "&name=" + user_name + "&value=" + side 
+        $.get("https://sidekick.online:81/room/put_bet" + query_string, function(result) { updateBets() });
       }
 
       $("document").ready(function() {
@@ -99,7 +91,7 @@
     </script>
   </head>
 
-  <body>
+  <body onload="init()">
     <div class="row">
       <div id="stream" class="col-6">
         <iframe id="stream-video" frameborder="0" allow="autoplay; encrypted-media"></iframe>
@@ -123,7 +115,24 @@
 
      </div>
 
-     <div id="watchers" class="row">
+	<input type="button" value="присоединиться к чату" onClick="start_stream()"/>
+     <div id="watchers" class="row"> 
+		<input id="streamer_id" type=hidden value="stream1">
+	    <div class="watcher col-3" id="localVideo">
+            </div>
+	    <div class="watcher col-3" id="remoteVideo1" style="display:none">
+              <img src="https://img04.rl0.ru/c65325a2216474b2eaf3cb24d63acf07/c615x400/news.rambler.ru/img/2018/02/01152931.044266.5111.jpg">
+            </div>
+            <div class="watcher col-3" id="remoteVideo2" style="display:none">
+              <img src="https://img04.rl0.ru/c65325a2216474b2eaf3cb24d63acf07/c615x400/news.rambler.ru/img/2018/02/01152931.044266.5111.jpg">
+            </div>
+	    <div class="watcher col-3" id="remoteVideo3" style="display:none">
+              <img src="https://img04.rl0.ru/c65325a2216474b2eaf3cb24d63acf07/c615x400/news.rambler.ru/img/2018/02/01152931.044266.5111.jpg">
+            </div>
+            <div class="watcher col-3" id="remoteVideo4" style="display:none">
+              <img src="https://img04.rl0.ru/c65325a2216474b2eaf3cb24d63acf07/c615x400/news.rambler.ru/img/2018/02/01152931.044266.5111.jpg">
+            </div>
+
     </div>
   </body>
 </html>

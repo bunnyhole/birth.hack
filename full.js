@@ -39,7 +39,7 @@ function startStreaming(session) {
 }
 
 function setStatus(status, element_id) {
-    document.getElementById(element_id).innerHTML = status;
+    //document.getElementById(element_id).innerHTML = status;
 }
 
 let friends_id_list = ["1", "2", "3", "4", "5"];

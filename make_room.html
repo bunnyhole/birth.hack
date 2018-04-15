@@ -11,18 +11,22 @@
         <h3 style="text-align: center; font-size: 3.0vw; font-family: sans-serif; padding-top: 1em; margin: 0">Cоздать
             комнату</h3>
         <p align="center" style="font-size: 2.0vw; font-family: sans-serif;"><b>Название комнаты: </b><br>
-            <input type="text" style="font-size: 80%; background: white;">
+            <input id="name" type="text" style="font-size: 80%; background: white;">
         </p>
         <p align="center" style="font-size: 2.0vw; font-family: sans-serif"><b>Выберите матч:</b><Br>
             <input type="radio" name="browser" value="first" style="font-family:sans-serif">Россия - Испания<Br>
             <input type="radio" name="browser" value="second" style="font-family:sans-serif">Англия - Франция<Br>
         </p>
-        <button style="color: #222; width: 33%; height: 15%; font-size: 3.0vw; margin-left: 33%; font-family: sans-serif">
+        <button id="go" style="color: #222; width: 33%; height: 15%; font-size: 3.0vw; margin-left: 33%; font-family: sans-serif">
             Погнали
         </button>
     </div>
 </div>
 
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
 <script>
     var url_string = window.location.href;
     var url = new URL(url_string);
@@ -30,6 +34,23 @@
     var last_name = url.searchParams.get("last_name");
     console.log(first_name, last_name);
 
+$("document").ready(function() {
+	$("#go").click(function() {
+		var home;
+		var guest;
+		var yt_src;
+		var name = $("#name").val()
+		if ($('input[name=browser]:checked').val() == "first" || true) {
+			home = "РОС";
+			guest = "ИСП";
+			yt_src = "https://www.1tv.ru/embed/102490:12";
+		}
+		var query_string = "?name=" + name + "&home=" + home + "&guest=" + guest + "&yt_src=" + yt_src;
+		$.get("https://sidekick.online:81/room/create" + query_string, function() {
+			window.location.href = "https://sidekick.online/room.html?room=" + name + "&user_name=" + first_name + " " + last_name;
+		});
+	})
+});
 </script>
 
 </body>
