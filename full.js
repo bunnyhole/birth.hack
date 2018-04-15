@@ -56,15 +56,15 @@ function update_friends() {
     friends_id_list.forEach(function (friend_id, i, friends_id_list) {
         //console.log(friend_id);
         Flashphoner.createSession({urlServer: hostname}).on(Flashphoner.constants.SESSION_STATUS.ESTABLISHED, function (session) {
-            startPlayback(session, friend_id, friend_id, false);
+            startPlayback(session, friend_id, i+1, false);
         }).on(Flashphoner.constants.SESSION_STATUS.DISCONNECTED, function () {
             setStatus("DISCONNECTED", "status" + friend_id);
-            document.getElementById("remoteVideo" + friend_id).innerHTML = "";
-            document.getElementById("remoteVideo" + friend_id).style.display = "none";
+            document.getElementById("remoteVideo" + (i+1)).innerHTML = "";
+            document.getElementById("remoteVideo" + (i+1)).style.display = "none";
         }).on(Flashphoner.constants.SESSION_STATUS.FAILED, function () {
             setStatus("FAILED", "status" + friend_id);
-            document.getElementById("remoteVideo" + friend_id).innerHTML = "";
-            document.getElementById("remoteVideo" + friend_id).style.display = "none";
+            document.getElementById("remoteVideo" + (i+1)).innerHTML = "";
+            document.getElementById("remoteVideo" + (i+1)).style.display = "none";
         });
     });
 
@@ -87,7 +87,7 @@ function startPlayback(session, friend_id, friend_video_id, is_real) {
     } else {
         console.log("fake_video");
     }
-    let name_stream = "stream" + friend_id;
+    let name_stream = friend_id;
     session.createStream({
         name: name_stream,
         display: working_video,
