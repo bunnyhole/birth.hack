@@ -17,7 +17,7 @@ def create(request):
     home = request.GET.get('home', '')
     guest = request.GET.get('guest', '')
     yt_src = request.GET.get('yt_src', '')
-    room = Room(name=name, home=home, guest=guest, yt_src=yt_src)
+    room = Room(name=name, home=home, guest=guest, yt_src=yt_src, home_amount=1000, guest_amount=1214)
     room.save();
     return HttpResponse()
 
@@ -30,6 +30,16 @@ def room(request):
     response_data["yt_src"] = room.yt_src
     response_data["home"] = room.home
     response_data["guest"] = room.guest
+    response_data["home_amount"] = 1000
+    response_data["guest_amount"] = 1214
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+def is_finished(request):
+    room_name = request.GET.get('name', '')
+    room = Room.objects.get(name=room_name)      
+
+    response_data = {}
+    response_data["is_finished"] = room.is_finished()
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 def chat(request):

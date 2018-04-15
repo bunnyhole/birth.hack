@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="css/login.css">
+    <title>sidekick</title>
+  </head>
+  <body>
+    <div id="main">
+      <div class="login">
+        <div class="login-screen">
+          <img src="images/logo.jpg" style="width: 200px; margin-bottom: 1em;">
+          <script type="text/javascript" src="//vk.com/js/api/openapi.js?153"></script>
+          <script type="text/javascript">
+            VK.init({apiId: 6448277});
+          </script>
+
+          <!-- VK Widget -->
+          <div id="vk_auth"></div>
+          <script type="text/javascript">
+		function getQueryVariable(variable) {
+    var query = window.location.search.substring(1);
+    var vars = query.split('&');
+    for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split('=');
+        if (decodeURIComponent(pair[0]) == variable) {
+            return decodeURIComponent(pair[1]);
+        }
+    }
+    console.log('Query variable %s not found', variable);
+}
+		var room_name = getQueryVariable("room")
+            VK.Widgets.Auth("vk_auth", {"authUrl":"room.html?room=" + room_name});
+          </script>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+

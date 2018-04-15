@@ -41,13 +41,16 @@
         };
 
         var user_name = getUrlParameter("user_name")
+	if (!user_name) {
+		user_name = getUrlParameter("first_name") + " "  + getUrlParameter("last_name");
+	}
         var query_string = "?name=" + getUrlParameter("room")
 
         $.get("https://sidekick.online:81/room/" + query_string, function (result) {
             console.log(result);
             $("#stream-video").attr("src", result.yt_src);
-            $("#home-title").html(result.home);
-            $("#guest-title").html(result.guest);
+            $("#home-title").html(result.home + "(1000 ₽)" );
+            $("#guest-title").html(result.guest + "(1214 ₽)");
         });
 
 	$.get('https://sidekick.online:81/room/register' + query_string + "&user_name=" + user_name, function(result) {});
@@ -68,16 +71,17 @@
 
 	var updateWatchers = function() {
       $.get("https://sidekick.online:81/room/watchers" + query_string, function(result) {
-        var new_friends_id_list = [];
+        var new_friends_id_list = new Set();
 	console.log(result);
 	for (var i = 0; i < result.watchers.length; ++i) {
-		if (!new_friends_id_list.includes(result.watchers[i])) {
-			new_friends_id_list.push(result.watchers[i].name)	
-			$(`.watcher:eq(${i})`).show()
-			console.log("ok");	
-		}
+		//if (!new_friends_id_list.includes(result.watchers[i])) {
+		//	new_friends_id_list.push(result.watchers[i].name)	
+		//	$(`.watcher:eq(${i})`).show()
+		//	console.log("ok");	
+		//}
+		new_friends_id_list.add(result.watchers[i].name);
         }
-	if (new_friends_id_list.toString() != friends_id_list.toString()) {
+	if (new_friends_id_list.size != friends_id_list.size) {
 		friends_id_list = new_friends_id_list;
 		update_friends();
 	}
@@ -86,7 +90,6 @@
       
       var updateBets = function() {
         $.get("https://sidekick.online:81/room/bets" + query_string, function(result) {
-          $("#bet-amount").html(1000*result.bets.length + "₽")
           $("#home").html("")
           $("#guest").html("")
           for (var i = 0; i < result.bets.length; ++i) {
@@ -94,22 +97,25 @@
               $("#set-home").hide();
               $("#set-guest").hide();
             }
-        });
-
+		}
+	});
+	}
         /*$.get("https://sidekick.online:81/room/watchers" + query_string, function(result) {
           for (var i = 0; i < result.watchers.length; ++i) {
             $("#watchers").append(`
                     `);
           }
         });*/
-
+	
 
         var updateBets = function () {
             $.get("https://sidekick.online:81/room/bets" + query_string, function (result) {
-                $("#bet-amount").html(1000 * result.bets.length + "₽")
+		var total = 0;
                 $("#home").html("")
                 $("#guest").html("")
                 for (var i = 0; i < result.bets.length; ++i) {
+		if (result.bets[i].value == "home") total += 1000;
+		else total += 1214
                     if (result.bets[i].name == user_name) {
                         $("#set-home").hide();
                         $("#set-guest").hide();
@@ -122,6 +128,7 @@
               </div>
             `);
                 }
+                $("#bet-amount").html(total + "₽")
             });
         }
 
@@ -137,10 +144,22 @@
         $("#set-guest").click(function() { postBet("guest") });
         $("#join").click(function() { init();  start_stream(); });
         $("#update").click(function() { update_friends() });
+	$("#invite").val("https://sidekick.online/invite.html?room=" + getUrlParameter("room"))
 	$("#streamer_id").val(user_name);
         setInterval(updateBets, 1000);
         setInterval(updateWatchers, 10000);
       });
+
+	setTimeout(function() {
+		console.log("123");
+		$("#bets").html(`
+			<div style="text-align: center; font-size: 2em;">Матч окончен</div>
+			<div style="text-align: center; font-size: 4em;">2:4</div>
+			<div style="text-align: center; font-size: 2em;">Михаил Маликов: <span style="color: #CC0000">-1000₽</span></div>	
+			<div style="text-align: center; font-size: 2em;">Матвей Волков: <span style="color: #669966">+900₽</span></div>	
+		`,)
+	}, 60000)
+
     </script>
 </head>
 
@@ -168,12 +187,13 @@
 
      </div>
 
-	<input type="button" value="присоединиться к чату" id="join"/>
-	<input type="button" value="обновить" id="update"/>
+	<button class="button" id="join">присоединиться к чату</button>
+	<button style="text-size: 2.2em" class="button" id="update">обновить</button>
+	<input type="text" id="invite" style="height:3.5em;"/>
      <div id="watchers" class="row"> 
 		<div id="fakeVideo" style="display:none"></div>
 		<input id="streamer_id" type=hidden value="stream1">
-	    <div id="localVideo" style="display: none">
+	    <div id="localVideo" style="display: block; float: left; padding: 15px;">
             </div>
 	    <div class="watcher col-3" id="remoteVideo1" style="display:none">
             </div>

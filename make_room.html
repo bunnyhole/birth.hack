@@ -40,15 +40,15 @@ $("document").ready(function() {
 		var guest;
 		var yt_src;
 		var name = $("#name").val()
-		if ($('input[name=browser]:checked').val() == "first" || true) {
+		if ($('input[name=browser]:checked').val() == "first") {
 			home = "РОС";
 			guest = "ИСП";
 			yt_src = "https://www.1tv.ru/embed/102490:12";
 		}
-		if ($('input[name=browser]:checked').val() == "second" || true) {
+		if ($('input[name=browser]:checked').val() == "second") {
 			home = "АНГЛ";
 			guest = "ФРАНЦ";
-			yt_src = "https://youtu.be/MqWsHOdc45g";
+			yt_src = "https://www.youtube.com/embed/MqWsHOdc45g";
 		}
 		var query_string = "?name=" + name + "&home=" + home + "&guest=" + guest + "&yt_src=" + yt_src;
 		$.get("https://sidekick.online:81/room/create" + query_string, function() {

@@ -7,6 +7,7 @@ let localVideo;
 function init() {
     Flashphoner.init();
     localVideo = document.getElementById("localVideo");
+	document.getElementById("localVideo").innerHTML = "";
     //let timerId = setInterval(update_friends, 2000);
 }
 
@@ -42,7 +43,7 @@ function setStatus(status, element_id) {
     //document.getElementById(element_id).innerHTML = status;
 }
 
-let friends_id_list = [];
+let friends_id_list = new Set();
 
 let video_id_to_update = [];
 
@@ -52,21 +53,28 @@ function update_friends() {
     //     // document.getElementById("remoteVideo" + i).style.display = "none";
     // }
     video_id_to_update = [];
-    console.log("update friend");
-    friends_id_list.forEach(function (friend_id, i, friends_id_list) {
+    console.log("update friend", friends_id_list);
+	let i=0;
+    for (let friend_id of friends_id_list) {
         //console.log(friend_id);
+        let local_i = i;
+        if (friend_id != user_name) {
+		
+	
         Flashphoner.createSession({urlServer: hostname}).on(Flashphoner.constants.SESSION_STATUS.ESTABLISHED, function (session) {
-            startPlayback(session, friend_id, i+1, false);
+            startPlayback(session, friend_id, local_i+1, false);
         }).on(Flashphoner.constants.SESSION_STATUS.DISCONNECTED, function () {
             setStatus("DISCONNECTED", "status" + friend_id);
-            document.getElementById("remoteVideo" + (i+1)).innerHTML = "";
-            document.getElementById("remoteVideo" + (i+1)).style.display = "none";
+            document.getElementById("remoteVideo" + (local_i+1)).innerHTML = "";
+            document.getElementById("remoteVideo" + (local_i+1)).style.display = "none";
         }).on(Flashphoner.constants.SESSION_STATUS.FAILED, function () {
             setStatus("FAILED", "status" + friend_id);
-            document.getElementById("remoteVideo" + (i+1)).innerHTML = "";
-            document.getElementById("remoteVideo" + (i+1)).style.display = "none";
+            document.getElementById("remoteVideo" + (local_i+1)).innerHTML = "";
+            document.getElementById("remoteVideo" + (local_i+1)).style.display = "none";
         });
-    });
+}
+i=i+1;
+    };
 
 
 }
