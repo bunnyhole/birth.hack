@@ -1,5 +1,5 @@
 let stream_id;
-let hostname = "wss://localhost:8443";
+let hostname = "wss://sidekick.online:8443";
 
 let localVideo;
 
@@ -7,7 +7,7 @@ let localVideo;
 function init() {
     Flashphoner.init();
     localVideo = document.getElementById("localVideo");
-    let timerId = setInterval(update_friends, 2000);
+    //let timerId = setInterval(update_friends, 2000);
 }
 
 function start_stream() {
