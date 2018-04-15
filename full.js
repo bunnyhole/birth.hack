@@ -42,7 +42,7 @@ function setStatus(status, element_id) {
     document.getElementById(element_id).innerHTML = status;
 }
 
-let friends_id_list = ["1", "2"];
+let friends_id_list = ["1", "2", "3", "4", "5"];
 
 let video_id_to_update = [];
 
