@@ -1,0 +1,129 @@
+<html>
+  <head>
+    <title>SIDEKICK</title>
+    <link rel="stylesheet" type="text/css" href="css/room.css">
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous"></script>
+
+    <script>
+      function getUrlParameter(sParam) {
+        var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+          sParameterName = sURLVariables[i].split('=');
+
+          if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
+          }
+        }
+      }; 
+      
+      
+      var room_data = {
+        name: getUrlParameter("room")
+      }
+
+      $.get("http://localhost/room", room_data, function (result) {
+        console.log(result);
+        $("#stream-video").attr("src", result.yt_src);       
+        $("#home-title").html(result.home);       
+        $("#guest-title").html(result.guest);       
+      });
+
+      $.get("http://localhost/room/chat", room_data, function (result) {
+        console.log(result);
+        for (var i = 0; i < result.messages.length; ++i) {
+          $("#chat").append(`
+            <div class="message">
+              <div class="message-author">${result.messages[i].name}</div>
+              <div class="message-body">${result.messages[i].body}</div>
+            </div>
+          `)
+        }
+      });
+
+      $.get("http://localhost/room/watchers", room_data, function(result) {
+        for (var i = 0; i < result.watchers.length; ++i) {
+          $("#watchers").append(`
+            <div class="watcher col-3">
+              <img src="https://img04.rl0.ru/c65325a2216474b2eaf3cb24d63acf07/c615x400/news.rambler.ru/img/2018/02/01152931.044266.5111.jpg">
+            </div>
+          `);
+        }
+      });
+      
+      var user_name = "Михаил Маликов"
+      
+      var updateBets = function() {
+        $.get("http://localhost/room/bets", room_data, function(result) {
+          $("#bet-amount").html(1000*result.bets.length + "₽")
+          $("#home").html("")
+          $("#guest").html("")
+          for (var i = 0; i < result.bets.length; ++i) {
+            if (result.bets[i].name == user_name) {
+              $("#set-home").hide();
+              $("#set-guest").hide();
+            }
+
+            var element = $("#" + result.bets[i].value);
+            element.append(`
+              <div class="bet">
+                ${result.bets[i].name}
+              </div>
+            `);
+          }
+        });
+      }
+
+      var postBet = function(side) {
+        var bet_data = {
+          room_name: room_data["name"],
+          name: user_name,
+          value: side,
+        }
+        console.log(bet_data);
+
+        $.get("http://localhost/room/put_bet", bet_data, function(result) { updateBets() });
+      }
+
+      $("document").ready(function() {
+        $("#set-home").click(function() { postBet("home") });
+        $("#set-guest").click(function() { postBet("guest") });
+        setInterval(updateBets, 1000);
+      });
+    </script>
+  </head>
+
+  <body>
+    <div class="row">
+      <div id="stream" class="col-6">
+        <iframe id="stream-video" frameborder="0" allow="autoplay; encrypted-media"></iframe>
+      </div>
+
+      <div class="col-1"></div>
+     <div id="bets" class="col-5">
+        <div id="bet-amount"></div>
+        <div class="bet-side" style="left: 0">
+
+          <div id="home-title"> </div>
+          <div id="home"></div>
+          <button id="set-home">сделать ставку</button>
+        </div>
+        <div class="bet-side" style="right: 0">
+          <div id="guest-title"></div>
+          <div id="guest"></div>
+          <button id="set-guest">сделать ставку</button>
+        </div>
+      </div>
+
+     </div>
+
+     <div id="watchers" class="row">
+    </div>
+  </body>
+</html>
