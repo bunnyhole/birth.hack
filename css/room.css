@@ -2,6 +2,12 @@
     box-sizing: border-box;
 }
 
+body {
+  background-color: #222;
+  color: #fff;
+  font-family: sans-serif;
+}
+
 .col-1 {width: 8.33%;}
 .col-2 {width: 16.66%;}
 .col-3 {width: 25%;}
@@ -18,7 +24,6 @@
 [class*="col-"] {
     float: left;
     padding: 15px;
-    border: 1px solid red;
 }
 
 [class*="col-"] img {
@@ -44,3 +49,28 @@
   height: 50%;
 }
 
+.bet-side {
+  width: 45%;
+  display: inline-block;
+}
+
+#bet-amount {
+  font-weight: bold;
+  font-size: 2em;
+}
+
+.bet-side {
+  margin-top: 0;
+}
+
+#home-title, #guest-title {
+  font-weight: bold;
+  font-size: 1.3em;
+  margin-bottom: 0.5em;
+  top: 0;
+  float: top;
+}
+
+.bet {
+  margin-bottom: 0.5em;
+}
