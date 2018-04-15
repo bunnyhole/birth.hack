@@ -45,6 +45,11 @@ $("document").ready(function() {
 			guest = "ИСП";
 			yt_src = "https://www.1tv.ru/embed/102490:12";
 		}
+		if ($('input[name=browser]:checked').val() == "second" || true) {
+			home = "АНГЛ";
+			guest = "ФРАНЦ";
+			yt_src = "https://youtu.be/MqWsHOdc45g";
+		}
 		var query_string = "?name=" + name + "&home=" + home + "&guest=" + guest + "&yt_src=" + yt_src;
 		$.get("https://sidekick.online:81/room/create" + query_string, function() {
 			window.location.href = "https://sidekick.online/room.html?room=" + name + "&user_name=" + first_name + " " + last_name;
